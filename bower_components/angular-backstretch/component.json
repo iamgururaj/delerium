@@ -1,0 +1,14 @@
+{
+  "name": "angular-backstrech",
+  "version": "1.0.1",
+  "main": "angular-backstretch.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+  	"jquery": ">1.9.1",
+  	"jquery-backstretch": "https://raw.github.com/srobbin/jquery-backstretch/master/jquery.backstretch.min.js"
+  }
+}

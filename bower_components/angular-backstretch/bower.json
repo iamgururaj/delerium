@@ -1,0 +1,23 @@
+{
+  "name": "angular-backstrech",
+  "description": "Angular module for jquery-backstretch package by srobbin",
+  "version": "0.1.0",
+  "homepage": "http://srobbin.com/jquery-plugins/backstretch/",
+  "main": "angular-backstretch.js",
+  "ignore": [],
+  "keywords": [ 
+    "backstretch",
+    "angular",
+    "angularjs",
+    "srobbin"
+  ],
+  "authors": [{
+    "name": "Scott Robbin",
+    "email": "scott@robbin.co",
+    "url": "http://srobbin.com"
+  }],
+  "dependencies": {
+    "jquery": "~1.9.1",
+    "jquery-backstretch": "~2.0.4"
+  }
+}

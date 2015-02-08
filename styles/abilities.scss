@@ -1,0 +1,122 @@
+.ability-background-pattern {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    position: fixed;
+    background: url("../images/background-pattern.png") repeat scroll !important;
+}
+.ability-header-wrapper {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+.ability-text-glow {
+    color: rgba(255, 255, 255, 0.4);
+    font: 80px Lato;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    font-weight: 100;
+    -webkit-animation: 2s ability-glow infinite;
+    -moz-animation: 2s ability-glow infinite;
+    -o-animation: 2s ability-glow infinite;
+    -ms-animation: 2s ability-glow infinite;
+    animation: 2s ability-glow infinite;
+}
+@-webkit-keyframes ability-glow {
+    50% {
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: rgba(255, 200, 255, 1) 2px 1px 30px;
+    }
+    100% {
+        color: rgba(255, 255, 255, 0.4);
+    }
+}
+@-moz-keyframes ability-glow {
+    50% {
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: rgba(255, 200, 255, 1) 2px 1px 30px;
+    }
+    100% {
+        color: rgba(255, 255, 255, 0.4);
+    }
+}
+@-o-keyframes ability-glow {
+    50% {
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: rgba(255, 200, 255, 1) 2px 1px 30px;
+    }
+    100% {
+        color: rgba(255, 255, 255, 0.4);
+    }
+}
+@-ms-keyframes ability-glow {
+    50% {
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: rgba(255, 200, 255, 1) 2px 1px 30px;
+    }
+    100% {
+        color: rgba(255, 255, 255, 0.4);
+    }
+}
+@keyframes ability-glow {
+    50% {
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: rgba(255, 200, 255, 1) 2px 1px 30px;
+    }
+    100% {
+        color: rgba(255, 255, 255, 0.4);
+    }
+}
+.link {
+    stroke: #FFF;
+    /*stroke-opacity: 1;*/
+}
+/* d3-tip*/
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    width: 420px;
+    height: 150;
+    font-size: 13px;
+    /*color: #fff;
+    border-radius: 2px;
+    letter-spacing: 1px;*/
+    color: #FFF;
+    border-radius: 5px;
+    background-color: #161616;
+    box-shadow: 0px 0px 5px #fff;
+    border: 1px solid rgba(200, 200, 200, 0.85);
+    letter-spacing: 1px;
+}
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    width: 100%;
+    line-height: 1;
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+    font-size: 16px;
+    color: #161616;
+}
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+    margin: -4px 0 0 0;
+    top: 100%;
+    left: 0;
+}
+.d3-tip-label {
+    min-width: 30%;
+    margin-bottom: 0px;
+    color: #fff;
+}
+.d3-tip-value {
+    color: #fff;
+}
+#ability {
+    margin: 50px 70px 0;
+}
