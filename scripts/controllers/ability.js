@@ -3,6 +3,9 @@ var width = 1280,
     height = 700;
 dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
     $scope.skillTooltip = {};
+    /*
+    D3 tooltip html which is displayed on hover over a skill hexagon
+     */
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
@@ -13,6 +16,10 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
                 '<div><label class=\'d3-tip-label\'>Description </label> :  <span class=\'d3-tip-value\'>' + d.skill.description + '</span></div>';
         });
 
+    /*
+    d3 force layout which will holds together the hexagon skill nodes and the links between them.
+    More Info: https://github.com/mbostock/d3/wiki/Force-Layout
+    */
     var force = d3.layout.force()
         .linkDistance(200)
         .gravity(0.06)
@@ -21,66 +28,13 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
         .friction(0)
         .size([width *= 2 / 3, height *= 2 / 3]);
 
+    /*
+    The SVG component where the rendering of the layout happens
+     */
     var svg = d3.select('#ability').append('svg:svg')
         .attr('width', width)
         .attr('height', height);
     svg.call(tip);
-
-    var skillPolygonData = [{
-        r: 40,
-        x: 250,
-        y: 100,
-        id: 'spd',
-        percent: 50,
-        sw: 2,
-        stroke: '#fff',
-        fill: '#161616',
-        filter: 'drop-shadow( 5px 5px 5px #fff )'
-    }];
-
-    var skillPolygonOverlayData = [{
-        r: 40,
-        x: 250,
-        y: 100,
-        id: 'spdo',
-        sw: 0,
-        stroke: '#161616',
-        fill: '#161616',
-        filter: 'drop-shadow( 5px 5px 5px #fff )'
-    }];
-
-    var pulseData = [
-        [{
-            r1: 40,
-            r2: 47,
-            r: 40,
-            x: 250,
-            y: 100,
-            id: 'polyPulse1',
-            duration1: 1000,
-            duration2: 0,
-            stroke: '#fff',
-            sw: 1.5,
-            sw1: 1.5,
-            sw2: 0,
-            fill: 'none'
-        }],
-        [{
-            r1: 50,
-            r2: 57,
-            r: 50,
-            x: 250,
-            y: 100,
-            id: 'polyPulse2',
-            duration1: 1000,
-            duration2: 0,
-            stroke: '#fff',
-            sw: 1.5,
-            sw1: 1.5,
-            sw2: 0,
-            fill: 'none'
-        }]
-    ];
 
     var pulseGenericData = {
         radius: 40,
@@ -95,12 +49,14 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
         overlayId: 'spdo'
     };
 
+    // Loads the skills json. Once loaded triggers the functions to draw the entire layout
     $http.get('assets/json/skills.json').success(function(data) {
         var sf = skillFactory.loadSkills(data, pulseGenericData);
         createfilter(svg);
         drawGraph(sf);
     });
 
+    //The arrow marker design which is at the end of line.
     svg.append('svg:defs').selectAll('marker')
         .data(['end']) // Different link/path types can be defined here
         .enter().append('svg:marker') // This section adds in the arrows
@@ -115,6 +71,7 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
         .append('svg:path')
         .attr('d', 'M0,-5L10,0L0,5');
 
+    //Marker design for transition on mouse over.
     svg.append('svg:defs').selectAll('marker')
         .data(['aend']) // Different link/path types can be defined here
         .enter().append('svg:marker') // This section adds in the arrows
@@ -129,6 +86,9 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
         .append('svg:path')
         .attr('d', 'M0,-5L10,0L0,5');
 
+    /*
+        Draws the entire layout once the skills json is loaded
+    */
     function drawGraph(graph) {
         var link = svg.selectAll('.link')
             .data(graph.links)
@@ -141,6 +101,9 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
             .enter().append('path')
             .attr('class', 'node');
 
+        //Tick function is called when the layout is intialized. Force layout auto calculates the position of each node
+        //depending on the number of skills and how the skills are linked together.
+        //Dependant skills are mentioned in the dependant param of each skill.
         function tick() {
             var q = d3.geom.quadtree(node),
                 i = 0,
@@ -171,6 +134,7 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
                 .attr('marker-end', 'url(#end)');
         }
 
+        //Start Polygon pulse animation, show tip, Skill links animation on hover
         function mouseOverSkill(d, i) {
             fade(svg, i, 0.1, false);
             pulsatePolygon(svg, d.skill.pulseData[0], 'pp1');
@@ -178,6 +142,7 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
             tip.show(d);
         }
 
+        //Stops the animation on mouse out
         function mouseOutSkill(d, i) {
             fade(svg, i, 1, true);
             svg.select('#' + d.skill.pulseData[0][0].id).remove();
@@ -185,6 +150,10 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
             tip.hide(d);
         }
 
+        /*Called once when the entire layout drawn is over. Once nodes are positioned the skill x,y position is uodated
+         based on the calculated nodes positon, the partial hexagon is drawn depending on the skills
+         percentage. The skill image is placed using patternimage. A transparent hexagon is drawn for mouseover and mouse out events.
+        */
         function end() {
             node.attr('d', function(d, i) {
                     skillFactory.updateSkillXY(d.skill, d.x, d.y);
@@ -208,27 +177,5 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
             .start()
             .alpha(0.007);
     }
-
-    function drawSkillFactory(sf) {
-        var skills = sf.skills;
-        var svg = d3.select('svg');
-        createfilter(svg);
-        var i = 0;
-        $.each(skills, function(id, skill) {
-            skillFactory.updateSkillXY(skill, sf.nodes[i].x, sf.nodes[i].y);
-            var partialHexagon = drawPartialHexagon(svg, skill.skillPoly, '30');
-            var skillPolygonOverlay = drawHexagon(svg, skill.overlayPoly);
-            d3.select('#' + skill.overlayPoly[0].id).on('mouseover', function() {
-                    pulsatePolygon(svg, skill.pulseData[0], '30');
-                    pulsatePolygon(svg, skill.pulseData[1], '30');
-                })
-                .on('mouseout', function() {
-                    svg.select('#' + skill.pulseData[0][0].id).remove();
-                    svg.select('#' + skill.pulseData[1][0].id).remove();
-                });
-            i++;
-        });
-    }
-
 
 });

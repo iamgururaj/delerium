@@ -27,7 +27,9 @@ angular
             });
     });
 
-
+/*
+Returns Point P3 inbetween two given point P1 and P2 which is at a distance delta from P1
+*/
 function getPoint(p1, p2, delta) {
     var a = p1.x,
         b = p1.y,
@@ -44,6 +46,9 @@ function getPoint(p1, p2, delta) {
     };
 }
 
+/*
+Draw a SVG line using d3 data d, d.x, d.y represent the endings of each line.
+ */
 function drawLine() {
     return d3.svg.line()
         .x(function(d) {
@@ -54,6 +59,11 @@ function drawLine() {
         });
 }
 
+/*
+Generates Polygon points given sides of polygon(for hexagon its 6 which is used in app),
+r - radius of polygon from center to any one corner
+x, y - Offset points in the svg
+ */
 function polyPoints(n, x, y, r) {
     var points = [];
     var angle = 45;
@@ -67,11 +77,23 @@ function polyPoints(n, x, y, r) {
     return points;
 }
 
+/*
+Gets the centroid of a d3 selected polygon
+*/
 function getCentroid(selection) {
     var bbox = selection.getBBox();
     return [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2];
 }
 
+
+/**
+ * [Generates partial polygon points based on skill percentage]
+ * @param  {[number]} n [number of sides]
+ * @param  {[float]} x [offset position along x axis]
+ * @param  {[float]} y [offset position along y axis]
+ * @param  {[number]} t [skill level in percentage]
+ * @param  {[number]} r [radius of the polygon]
+ */
 function partialPolyPoints(n, x, y, t, r) {
     var points = polyPoints(n, x, y, r),
         tPoints = [],
@@ -100,14 +122,23 @@ function partialPolyPoints(n, x, y, t, r) {
     return tPoints;
 }
 
+/*
+Draws hexagon using d3 line generator and polygon points generated using above polyPoints function
+ */
 function hexagonPath(n, x, y, r) {
     return drawLine()((polyPoints(n, x, y, r)));
 }
 
+/*
+Draws Partial hexagon using d3 line generator and polygon points generated using above polyPoints function
+ */
 function partialHexagonPath(n, x, y, percent, r) {
     return drawLine()((partialPolyPoints(n, x, y, percent, r)));
 }
 
+/*
+Draws hexagon using d3 line generator and sets the stroke, storke-width and fill attributes of the hexagon
+ */
 function drawHexagon(svg, data) {
     return svg.append('g')
         .selectAll('path')
@@ -129,6 +160,9 @@ function drawHexagon(svg, data) {
         });
 }
 
+/*
+Transparent overlay hexagaon for mouseover and mouseout events
+ */
 function drawTransparentHexagon(svg, data) {
     return svg.append('g')
         .selectAll('path')
@@ -146,6 +180,9 @@ function drawTransparentHexagon(svg, data) {
         });
 }
 
+/*
+Draws partial hexagon using d3 line generator and sets the stroke, storke-width and fill attributes of the hexagon
+ */
 function drawPartialHexagon(svg, data) {
     return svg.append('g')
         .selectAll('path')
@@ -165,6 +202,9 @@ function drawPartialHexagon(svg, data) {
         });
 }
 
+/*
+Hexagon pulse generator function. Pulse displayed on mouse hover.
+ */
 function pulsatePolygon(svg, dataArray) {
     var data = dataArray[0];
 
@@ -190,6 +230,9 @@ function pulsatePolygon(svg, dataArray) {
     return drawHexagon(svg, dataArray).each(pulse);
 }
 
+/*
+Draws d3 circle using center cx, cy, radius - r and data. Not used in the app
+ */
 function makeCircle(svg, data, id, sw, r, cx, cy) {
     return svg.append('g')
         .selectAll('circle')
@@ -202,7 +245,9 @@ function makeCircle(svg, data, id, sw, r, cx, cy) {
         .attr('cx', cx)
         .attr('cy', cy);
 }
-
+/*
+Draws d3 circle pulse generator using center cx, cy, radius - r1, r2, duration - duration duration1, duration2 and data. Not used in the app
+ */
 function pulsate(svg, data, id, sw1, r1, cx, cy, sw2, r2, duration1, duration2) {
     function pulse() {
         var circle = d3.select('circle#' + id);
@@ -225,6 +270,9 @@ function pulsate(svg, data, id, sw1, r1, cx, cy, sw2, r2, duration1, duration2) 
     makeCircle(svg, data, id, sw1, r1, cx, cy).each(pulse);
 }
 
+/*
+Creates glow filter around hexagon
+ */
 function createfilter(svg) {
     var defs = svg.append('defs');
     var filter = defs.append('filter')
@@ -245,6 +293,9 @@ function createfilter(svg) {
         .attr('in', 'SourceGraphic');
 }
 
+/*
+Checks whether the nodes collide with each other. If so generate a different offset point
+ */
 function collide(node) {
     var r = node.radius + 16,
         nx1 = node.x - r,
@@ -269,6 +320,9 @@ function collide(node) {
     };
 }
 
+/*
+Draws square with image. The images set in the center of the hexagon for each skill
+ */
 function drawSquareWithImage(element, x, y, length, fillUrl) {
     var d = element.append('rect')
         .attr('x', x - length / 2)
@@ -279,6 +333,9 @@ function drawSquareWithImage(element, x, y, length, fillUrl) {
     return d;
 }
 
+/*
+SVG pattern image used to set image of each skill
+ */
 function patternImage(element, id, href) {
     var def = element.select('defs');
     def.append('pattern')
@@ -308,6 +365,10 @@ d3.selection.prototype.moveToBack = function() {
     });
 };
 
+/*
+On hover over a skills. Highlights, animates the node links to other skills in the affected direction. The skill links which are not
+impacted will be made transparent
+ */
 function fade(svg, i, opacity, stop) {
     svg.selectAll('.link')
         .filter(function(d) {
