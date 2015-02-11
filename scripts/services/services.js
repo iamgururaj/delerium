@@ -32,13 +32,19 @@ dlrm.factory('skillFactory', ['$http', function($http) {
         loadSkills: function(data, pgd) {
             $.each(data, function(i, skill) {
                 skillFactory.skills[skill.id] = skill;
-                skillFactory.nodes.push({
+                var node = {
                     'name': skill.name,
                     'r': pgd.radius,
                     'stroke': 0.5,
                     'fill': pgd.fill,
                     'skill': skill
-                });
+                };
+                if(skill.x){
+                    node.x = skill.x;
+                    node.y = skill.y;
+                    node.fixed = true;
+                }
+                skillFactory.nodes.push(node);
                 $.each(skill.dependant, function(k, o) {
                     skillFactory.links.push({
                         'source': i,
