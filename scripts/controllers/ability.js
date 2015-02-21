@@ -122,7 +122,7 @@ dlrm.controller('AbilityCtrl', function($scope, $http, skillFactory) {
                     skillFactory.updateSkillXY(d.skill, d.x, d.y);
                     drawPartialHexagon(svg, d.skill.skillPoly);
                     drawBackFillHexagon(svg, d.skill.skillPoly);
-                    if(pUpdated<4){
+                    if(pUpdated<graph.nodes.length){
                         patternImage(svg, d.skill.id, d.skill.iconpath);
                         $('#act'+d.skill.id).qtip({
                         content: '<div><label class=\'d3-tip-label\'>ID </label> :  <span class=\'d3-tip-value\'>' + d.skill.id + '</span></div><br>' +
