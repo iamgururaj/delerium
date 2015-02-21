@@ -112,7 +112,6 @@ function partialPolyPoints(n, x, y, t, r) {
             var delta = ((side + t) / side);
             var toPoint = points[i + 1] ? points[i + 1] : points[i - 1];
             var fromPoint = points[i];
-            console.log(fromPoint, toPoint);
             delta = delta < 1 ? 1 : delta;
             tPoints.push(getPoint(toPoint, fromPoint, delta));
             break;
@@ -168,6 +167,7 @@ function drawTransparentHexagon(svg, data) {
         .selectAll('path')
         .data(data)
         .enter().append('path').attr('id', function(d) {
+            $('#T'+d.id).parent().remove();
             return 'T' + d.id;
         })
         .attr('d', function(d) {
@@ -180,6 +180,24 @@ function drawTransparentHexagon(svg, data) {
         });
 }
 
+function drawBackFillHexagon(svg, data) {
+    return svg.append('g')
+        .selectAll('path')
+        .data(data)
+        .enter().append('path').attr('id', function(d) {
+            $('#BF'+d.id).parent().remove();
+            return 'BF' + d.id;
+        })
+        .attr('d', function(d) {
+            return hexagonPath(6, d.x, d.y, d.r);
+        })
+        .attr('fill', function(d) {
+            return '#000000';
+        }).attr('fill-opacity', function(d) {
+            return '1';
+        });
+}
+
 /*
 Draws partial hexagon using d3 line generator and sets the stroke, storke-width and fill attributes of the hexagon
  */
@@ -188,6 +206,7 @@ function drawPartialHexagon(svg, data) {
         .selectAll('path')
         .data(data)
         .enter().append('path').attr('id', function(d) {
+            $('#'+d.id).parent().remove();
             return d.id;
         })
         .attr('d', function(d) {
@@ -234,20 +253,20 @@ function pulsatePolygon(svg, dataArray) {
 Draws d3 circle using center cx, cy, radius - r and data. Not used in the app
  */
 function makeCircle(svg, data, id, sw, r, cx, cy) {
-    return svg.append('g')
-        .selectAll('circle')
-        .data(data)
-        .enter()
-        .append('circle')
-        .attr('id', id)
-        .attr('stroke-width', sw)
-        .attr('r', r)
-        .attr('cx', cx)
-        .attr('cy', cy);
-}
-/*
-Draws d3 circle pulse generator using center cx, cy, radius - r1, r2, duration - duration duration1, duration2 and data. Not used in the app
- */
+        return svg.append('g')
+            .selectAll('circle')
+            .data(data)
+            .enter()
+            .append('circle')
+            .attr('id', id)
+            .attr('stroke-width', sw)
+            .attr('r', r)
+            .attr('cx', cx)
+            .attr('cy', cy);
+    }
+    /*
+    Draws d3 circle pulse generator using center cx, cy, radius - r1, r2, duration - duration duration1, duration2 and data. Not used in the app
+     */
 function pulsate(svg, data, id, sw1, r1, cx, cy, sw2, r2, duration1, duration2) {
     function pulse() {
         var circle = d3.select('circle#' + id);
@@ -273,22 +292,44 @@ function pulsate(svg, data, id, sw1, r1, cx, cy, sw2, r2, duration1, duration2) 
 /*
 Creates glow filter around hexagon
  */
+/*function createfilter(svg) {
+    var defs = svg.append('defs');
+    var filter = defs.append('filter')
+        .attr('id', 'dropshadow');
+    filter.append('feGaussianBlur')
+        .attr('out', 'SourceGraphic')
+        .attr('stdDeviation', '1')
+        .attr('result', 'glow');
+    filter.append('feOffset')
+        .attr('out', 'blur')
+        .attr('dx', 2)
+        .attr('dy', 2)
+        .attr('result', 'glow');
+    filter.append('feColorMatrix')
+        .attr('result', 'matrixOut')
+        .attr('in', 'offOut')
+        .attr('type', 'matrix')
+        .attr('values', '1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0');
+    var feMerge = filter.append('feMerge');
+    feMerge.append('feMergeNode')
+        .attr('in', 'glow');
+    feMerge.append('feMergeNode')
+        .attr('in', 'glow');
+    feMerge.append('feMergeNode')
+        .attr('in', 'glow');
+        feMerge.append('feMergeNode')
+        .attr('in', 'glow');
+}*/
 function createfilter(svg) {
     var defs = svg.append('defs');
     var filter = defs.append('filter')
         .attr('id', 'dropshadow');
     filter.append('feGaussianBlur')
-        .attr('out', 'SourceAlpha')
-        .attr('stdDeviation', '2')
-        .attr('result', 'blur');
-    filter.append('feOffset')
-        .attr('out', 'blur')
-        .attr('dx', 2)
-        .attr('dy', 2)
-        .attr('result', 'offsetBlur');
+        .attr('stdDeviation', '3')
+        .attr('result', 'glow');
     var feMerge = filter.append('feMerge');
     feMerge.append('feMergeNode')
-        .attr('in', 'offsetBlur');
+        .attr('in', 'coloredBlur');
     feMerge.append('feMergeNode')
         .attr('in', 'SourceGraphic');
 }
@@ -323,12 +364,14 @@ function collide(node) {
 /*
 Draws square with image. The images set in the center of the hexagon for each skill
  */
-function drawSquareWithImage(element, x, y, length, fillUrl) {
+function drawSquareWithImage(element, x, y, length, fillUrl, id) {
+    $('#'+id).remove();
     var d = element.append('rect')
         .attr('x', x - length / 2)
         .attr('y', y - length / 2)
         .attr('width', length)
-        .attr('height', length);
+        .attr('height', length)
+        .attr('id', id);
     d = fillUrl ? d.attr('fill', fillUrl) : d;
     return d;
 }

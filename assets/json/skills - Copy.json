@@ -5,7 +5,9 @@
     "description": "You cover your eyes and dive into a spiral of glory taking your own life in a burst of flames, inflicting 222 damage to everyone and everything in a 10m range. Only works when below 10% health. Those immune to even fire damage will be effected.",
     "iconpath": "images/skill-1.png",
     "fixed": true,
-    "dependant": [1, 2]
+    "dependant": [1, 2],
+    "x": 500,
+    "y": 70
 }, {
     "name": "Automatic Weaponry Tactics",
     "id": 1,
@@ -13,7 +15,9 @@
     "description": "Automatic weapons provide an excellent option to mow down enemies with the highest DPS and firing rate of any weapon, but are most effective against lightly armored opponents.  Automatic weapons also offer AoE abilities along with suppression options.  The downside to automatic weapons is they are not as accurate as other ranged weapons, requiring you to get a little closer than you might like to.  Increasing your skill will open up new abilities and allow for better fittings.",
     "iconpath": "images/skill-2.png",
     "fixed": true,
-    "dependant": [2]
+    "dependant": [2],
+    "x":300,
+    "y":270
 }, {
     "name": "Bladed Weapon Tactics",
     "id": 2,
@@ -21,7 +25,9 @@
     "description": "Bladed weapons include both knives and swords, they offer a good option against all armor types. Their abilities offer quick strikes and attacks that open holes in the enemies’ defense making them good for use in groups.  Improving your skill will open up these abilities and allow for better fittings.",
     "fixed": true,
     "iconpath": "images/skill-3.png",
-    "dependant": [3]
+    "dependant": [3],
+    "x":500,
+    "y":270
 }, {
     "name": "Firing Weapon Tactics",
     "id": 3,
@@ -29,5 +35,7 @@
     "fixed": true,
     "description": "Bladed weapons include both knives and swords, they offer a good option against all armor types. Their abilities offer quick strikes and attacks that open holes in the enemies’ defense making them good for use in groups.  Improving your skill will open up these abilities and allow for better fittings.",
     "iconpath": "images/skill-4.png",
-    "dependant": []
+    "dependant": [],
+    "x":700,
+    "y":270
 }]
